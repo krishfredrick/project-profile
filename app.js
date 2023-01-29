@@ -5,6 +5,7 @@ const { default: helmet } = require('helmet');
 // const session = require('session')
 // const mongoDBSession = require('connect-mongodb-session')(session)
 const cors = require('cors')
+const rateLimiter = require('express-rate-limit')
 
 /** LOCAL FILE */
 const connectDB = require('./db');
@@ -21,6 +22,13 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}))
 app.use(helmet())
 app.use(cors())
+
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+  })
+);
 
 /**LOCAL MIDDLEWARE */
 
