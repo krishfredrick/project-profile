@@ -1,7 +1,9 @@
 const {StatusCodes} = require('http-status-codes')
 const validator = require('validator')
 const registerSchema = require('../models/register')
-const { NotFoundError, BadRequestError, UnauthenticatedError } = require('../error')
+const { NotFoundError, BadRequestError, UnauthenticatedError } = require('../error');
+
+
 
 
 const register = async(req, res)=>{
@@ -47,24 +49,74 @@ const login = async(req,res)=>{
   if(!isMatch){
     throw UnauthenticatedError('Your credentials Miss Match ..!')
   }
-  // console.log(req.session);
-  // req.session.isAuth = true;
-  //   req.session.user = {
-  //     username: registerSchema.username,
-  //     email: registerSchema.email,
-  //     userId: registerSchema._id,
-  //   };
+  console.log(req.session);
+  req.session.isAuth = true;
+    req.session.user = {
+      username: registerSchema.username,
+      email: registerSchema.email,
+      userId: registerSchema._id,
+    };
   console.log(user);
   res.status(StatusCodes.OK).json({
     user:{
       name:user.userName
     },
   })
-  res.redirect('/dashboard');
+  res.redirect('/profile');
 }
 
+const profile = async(req, res)=>{
+  upload(req, res, (err) => {
+    if (err) {
+      res.render('profile', {
+        msg: err
+      });
+    } else {
+      if (req.file == undefined) {
+        res.render('profile', {
+          msg: 'Error: No File Selected!'
+        });
+      }
+    }
+  });
+
+
+
+
+  const{state, country, collage, password, email, userName, name } = req.body;
+  const user = await registerSchema.findOneAndUpdate(email ,{
+    state,
+    country,
+    collage, 
+    password,
+    email,
+    userName,
+    name,
+    profilePic: `/uploads/${req.file.filename}`,
+  },{new: true}, (err, updated)=>{
+    if (err) {
+      res.render('dashboard', {
+        msg: 'Error updating profile'
+      });
+    } else {
+      res.render('dashboard', {
+        msg: 'Profile updated successfully',
+        data: updated
+      });
+    }
+
+  })
+
+  if(!user){
+    throw new BadRequestError('Credentials are not filled')
+  }
+
+  res.status(StatusCodes.ACCEPTED).send({
+    user:{user}
+  })
+}
 module.exports={
-  register, login
+  register, login, profile
 }
 
 

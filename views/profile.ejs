@@ -1,77 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>From</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+  <title>Sign Up</title>
 </head>
 <body>
-
-  <form class="row g-2" action="" method="post">
-    <div class="col-md-4">
-      <label for="validationServer01" class="form-label name"> Name</label>
-      <input type="text" class="form-control is-valid" id="validationServer01" value="" required>
-      <div class="valid-feedback">
-        Looks good!
+  <div class="container my-5">
+    <h2 class="text-center">Sign Up</h2>
+    <form action="/signup" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" name="name" required>
       </div>
-    </div>
-    <div class="col-md-4">
-      <label for="validationServer02" class="form-label password">Password</label>
-      <input type="text" class="form-control is-valid" id="validationServer02" value="" required>
-      <div class="valid-feedback">
-        Looks good!
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" name="username" required>
       </div>
-    </div>
-    <div class="col-md-4">
-      <label for="validationServerUsername" class="form-label username">Username</label>
-      <div class="input-group has-validation">
-        <span class="input-group-text" id="inputGroupPrepend3">@</span>
-        <input type="text" class="form-control is-invalid" id="validationServerUsername" aria-describedby="inputGroupPrepend3 validationServerUsernameFeedback" required>
-        <div id="validationServerUsernameFeedback" class="invalid-feedback">
-          Please choose a username.
-        </div>
+      <div class="form-group">
+        <label for="state">State</label>
+        <input type="text" class="form-control" id="state" name="state" required>
       </div>
-    </div>
-    <div class="col-md-6">
-      <label for="validationServer03" class="form-label email">Email</label>
-      <input type="text" class="form-control is-invalid" id="validationServer03" aria-describedby="validationServer03Feedback" required>
-      <div id="validationServer03Feedback" class="invalid-feedback">
-        Please provide a valid city.
+      <div class="form-group">
+        <label for="country">Country</label>
+        <input type="text" class="form-control" id="country" name="country" required>
       </div>
-    </div>
-    <div class="col-md-3">
-      <label for="validationServer04" class="form-label">State</label>
-      <select class="form-select is-invalid" id="validationServer04" aria-describedby="validationServer04Feedback" required>
-        <!-- <option selected disabled value="">Choose...</option> -->
-        <option>...</option>
-      </select>
-      <div id="validationServer04Feedback" class="invalid-feedback">
-        Please select a valid state.
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" name="password" required>
       </div>
-    </div>
-    <div class="col-md-3">
-      <label for="validationServer05" class="form-label">Country</label>
-      <input type="text" class="form-control is-invalid" id="validationServer05" aria-describedby="validationServer05Feedback" required>
-      <div id="validationServer05Feedback" class="invalid-feedback">
-        Please provide a valid zip.
+      <div class="form-group">
+        <label for="college">College</label>
+        <input type="text" class="form-control" id="college" name="college" required>
       </div>
-    </div>
-    <div class="col-12">
-      <div class="form-check">
-        <input class="form-check-input is-invalid" type="checkbox" value="" id="invalidCheck3" aria-describedby="invalidCheck3Feedback" required>
-        <label class="form-check-label" for="invalidCheck3">
-          Agree to terms and conditions
-        </label>
-        <div id="invalidCheck3Feedback" class="invalid-feedback">
-          You must agree before submitting.
-        </div>
+      <div class="form-group">
+        <label for="profilePic">Profile Picture</label>
+        <input type="file" class="form-control-file" id="profilePic" name="profilePic" required>
       </div>
-    </div>
-    <div class="col-12">
-      <button class="btn btn-primary submit" type="submit">Submit form</button>
-    </div>
-  </form>
-  
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
 </body>
 </html>
