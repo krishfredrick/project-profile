@@ -1,8 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { profile } = require('../controllers/auth')
-
 
 const registerSchema = new mongoose.Schema({
   name:{
@@ -38,6 +36,9 @@ const registerSchema = new mongoose.Schema({
     required:[true, 'Enter your Phone Number']
   }, 
   profile: String,
+  state:String,
+  country:String,
+  collageName:String,
 })
 
 registerSchema.pre('save', async function(){
@@ -60,10 +61,12 @@ registerSchema.methods.createJWT = function(){
   )
 }
 
-registerSchema.methods.comparePassword = async function({canditatePassword}){
-  const isMatch = await bcrypt.compare(canditatePassword,this.password)
+registerSchema.methods.comparePassword = async function({password}){
+  const isMatch = await bcrypt.compare(password,this.password)
   return isMatch;
 }
 
 
-module.exports = mongoose.model('register', registerSchema)
+
+
+module.exports = mongoose.model('Register', registerSchema)

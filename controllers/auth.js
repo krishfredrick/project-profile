@@ -1,72 +1,81 @@
 const {StatusCodes} = require('http-status-codes')
-const validator = require('validator')
-const registerSchema = require('../models/register')
+const registerSchema = require('../models/registerSchema')
 const { NotFoundError, BadRequestError, UnauthenticatedError } = require('../error');
 
-
-
-
+/** REGISER */
 const register = async(req, res)=>{
-  let email = req.body.email
-  userExits = await registerSchema.findOne({ email });
-  if (userExits) {
-    return res.send({
-      status: 403,
-      message: "User already exists",
-    });
-  }
+
+  /** 
+   * 1.create the user
+   * 2.validate the user
+   */
   const user = await registerSchema.create({...req.body})
-  const token = await user.createJWT()
+  
+  // const token = await user.createJWT()
+  console.log(user)
   if(!user){
     throw NotFoundError('Please provide every credentials')
   }
-  console.log(token)
-  res.status(StatusCodes.MOVED_TEMPORARILY).json({messge:' Registery SuccessFul !!!',user:{name:user.userName}, token}).redirect('/login')
+  res.status(StatusCodes.MOVED_TEMPORARILY).json({messge:' Registery SuccessFul !!!',user }).redirect('/login')
 }
 
 
 /** LOGIN */
 
 const login = async(req,res)=>{
+  
+  /** 
+   * 1.Getting Id, password
+   * 2.getting the Data from database using findOne {email, userName}
+   * 3.compareing the Password
+   * 4.invoking the Session
+   * 5.redirecting to the profile route
+   */
+  console.log(req.body)
   const {loginId, password} = req.body;
-  console.log(req.body);
+
   if(!loginId || ! password){
     throw new BadRequestError('please provide email and password')
   }
-  let user
-  if(validator.isEmail(loginId)){
-    user = await registerSchema.findOne({email:loginId})
-    
-  }else{
-    user = await registerSchema.findOne({userName:loginId})
-    
-  }
+
+  let user = await registerSchema.findOne({ $or:[{email:loginId}, {userName: loginId}]})
+
+  const token = await user.createJWT()
   if(!user){
     throw new UnauthenticatedError("Invalid Credentials")
   }
   
-  const isMatch = await registerSchema.comparePassword({password});
+  const isMatch = await user.comparePassword({password});
   if(!isMatch){
     throw UnauthenticatedError('Your credentials Miss Match ..!')
   }
   console.log(req.session);
   req.session.isAuth = true;
     req.session.user = {
-      username: registerSchema.username,
-      email: registerSchema.email,
-      userId: registerSchema._id,
+      username: user.userName,
+      email: user.email,
+      userId: user._id,
+      token,
     };
-  console.log(user);
+  console.log(user.userName);
   res.status(StatusCodes.OK).json({
     user:{
       name:user.userName
     },
+    user:{user},token
   })
-  res.redirect('/profile');
+  // res.redirect('/profile');
 }
 
+/** PROFILE */
 const profile = async(req, res)=>{
-  upload(req, res, (err) => {
+
+  /**
+   * 1.create theupload file path
+   */
+
+  // Uploading picture doubt of the code 
+  /*upload(req, res, (err) => {
     if (err) {
       res.render('profile', {
         msg: err
@@ -79,11 +88,13 @@ const profile = async(req, res)=>{
       }
     }
   });
+  */
 
 
 
 
-  const{state, country, collage, password, email, userName, name } = req.body;
+  const{state, country, collage, password, email, userName, name,  } = req.body;
+  console.log(req.body)
   const user = await registerSchema.findOneAndUpdate(email ,{
     state,
     country,
@@ -92,8 +103,12 @@ const profile = async(req, res)=>{
     email,
     userName,
     name,
-    profilePic: `/uploads/${req.file.filename}`,
-  },{new: true}, (err, updated)=>{
+    // profilePic: `/uploads/${req.file.filename}`,
+  },{new: true}, 
+
+  // Doubt of this code working need to debug in future
+  /*
+  (err, updated)=>{
     if (err) {
       res.render('dashboard', {
         msg: 'Error updating profile'
@@ -105,7 +120,9 @@ const profile = async(req, res)=>{
       });
     }
 
-  })
+  }
+  */
+  )
 
   if(!user){
     throw new BadRequestError('Credentials are not filled')
@@ -119,5 +136,3 @@ module.exports={
   register, login, profile
 }
 
-
-// module.exports = register;

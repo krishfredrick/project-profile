@@ -1,15 +1,14 @@
-const registerSchema = require('../models/register')
+// const registerSchema = require('../models/registerSchema')
 const jwt = require('jsonwebtoken')
 const {UnauthenticatedError} = require('../error')
 
 const auth = async (req, res, next)=>{
-  console.log(req.headers)
-  const authHeader = req.headers.Authorization
+  const authHeader = req.headers.authorization
+  console.log(authHeader)
   if(!authHeader || !authHeader.startsWith('Bearer')){
     throw new UnauthenticatedError('Authentication invalid')
   }
   const token = authHeader.split(' ')[1]
-
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET,function(err, decoded){
       if(err){
@@ -19,15 +18,20 @@ const auth = async (req, res, next)=>{
           error: err,
         })
       }
+      console.log('success1')
       res.json(decoded);
     })
+    console.log(payload, '<<< payload')
+    console.log('success2')
     req.user = {
       userId: payload.userId, email: payload.email
     }
-    console.log( '>>>',payload )
+    console.log('success3')
+   
+    
     next()
   } catch (err) {
-    console.log(err)
+    // console.log(err)
     throw new UnauthenticatedError('Authentication invalid')
   }
 }
