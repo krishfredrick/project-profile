@@ -24,9 +24,6 @@ app.use(helmet())
 app.use(cors())
 app.use(express.static('views'))
 
-app.set('view engine', 'ejs');
-app.set('views', 'views');
-
 app.use(
   rateLimiter({
     windowMs:  1000, // 15 minutes

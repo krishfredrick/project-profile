@@ -32,7 +32,12 @@ const auth = async (req, res, next)=>{
     next()
   } catch (err) {
     // console.log(err)
-    throw new UnauthenticatedError('Authentication invalid')
+    return res.status(500).json({
+      message: "Internal server error",
+      err
+
+    })
+    // throw new UnauthenticatedError('Authentication invalid')
   }
 }
 
