@@ -9,8 +9,9 @@ const auth = async (req, res, next)=>{
     throw new UnauthenticatedError('Authentication invalid')
   }
   const token = authHeader.split(' ')[1]
+  console.log('Token ...',token)
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET,function(err, decoded){
+   jwt.verify(token, process.env.JWT_SECRET,function(err, decoded){
       if(err){
         return res.json({
           success: "failed",
@@ -19,25 +20,23 @@ const auth = async (req, res, next)=>{
         })
       }
       console.log('success1')
+      console.log(decoded ,'<<< payload')
+      req.user = {
+        userId: decoded.userId, email: decoded.email
+      }
       res.json(decoded);
-    })
-    console.log(payload, '<<< payload')
-    console.log('success2')
-    req.user = {
-      userId: payload.userId, email: payload.email
     }
-    console.log('success3')
+    )
+
+    // payload is passing undefined
+    
    
     
     next()
   } catch (err) {
-    // console.log(err)
-    return res.status(500).json({
-      message: "Internal server error",
-      err
-
-    })
-    // throw new UnauthenticatedError('Authentication invalid')
+    // console.log( ">>>>",{err})
+    
+    throw new UnauthenticatedError('Authentication invalid')
   }
 }
 

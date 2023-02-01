@@ -104,17 +104,17 @@ const profile = async(req, res)=>{
     userName,
     name,
     // profilePic: `/uploads/${req.file.filename}`,
-  },{new: true}, 
+  },{new: true} 
 
   // Doubt of this code working need to debug in future
   /*
   (err, updated)=>{
     if (err) {
-      res.render('dashboard', {
+      res.send('dashboard', {
         msg: 'Error updating profile'
       });
     } else {
-      res.render('dashboard', {
+      res.send('dashboard', {
         msg: 'Profile updated successfully',
         data: updated
       });
@@ -123,6 +123,8 @@ const profile = async(req, res)=>{
   }
   */
   )
+
+  console.log('This is user--->>>', user)
 
   if(!user){
     throw new BadRequestError('Credentials are not filled')
