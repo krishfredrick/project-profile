@@ -25,6 +25,7 @@ const auth = async (req, res, next)=>{
         userId: decoded.userId, email: decoded.email
       }
       // res.json(decoded);
+      
     }
     )
 
